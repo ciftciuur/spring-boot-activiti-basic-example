@@ -7,7 +7,7 @@
         xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
         xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
         typeLanguage="http://www.w3.org/2001/XMLSchema"
-        expressionLanguage="http://www.w3.org/1999/XPath">
+        expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="test">
 
     <process id="basic-task-example" name="The One Task Process">
         <startEvent id="theStart"/>
