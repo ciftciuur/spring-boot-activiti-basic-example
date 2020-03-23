@@ -5,11 +5,13 @@ import com.example.process.repository.BPMUserRepository;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -47,5 +49,16 @@ public class BPMService {
         if (bpmUserRepository.findAll().size() == 0) {
             bpmUserRepository.save(new BPMUser("demo", "demoname", "demolastname", new Date()));
         }
+    }
+
+    public InputStream returnActiveProcessDiagram(String key) {
+        //TODO resourceName is null error !
+        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+                .processDefinitionKey(key).singleResult();
+
+        String diagramResourceName = processDefinition.getDiagramResourceName();
+        InputStream imageStream = repositoryService.getResourceAsStream(processDefinition.getDeploymentId(),
+                diagramResourceName);
+        return imageStream;
     }
 }
