@@ -61,6 +61,7 @@ public class ProcessApplication {
         return config;
     }
 
+
     @Bean
     public PlatformTransactionManager transactionManager() {
         return new DataSourceTransactionManager(databaseConnection());

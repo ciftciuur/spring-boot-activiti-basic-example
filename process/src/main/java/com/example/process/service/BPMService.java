@@ -2,11 +2,16 @@ package com.example.process.service;
 
 import com.example.process.model.BPMUser;
 import com.example.process.repository.BPMUserRepository;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.activiti.image.ProcessDiagramGenerator;
+import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +38,9 @@ public class BPMService {
     @Autowired
     private RepositoryService repositoryService;
 
+    @Autowired
+    private ProcessEngineConfiguration processEngineConfiguration;
+
     public void startProcess(String assignee) {
         repositoryService.createDeployment().addClasspathResource("processes/basic-task-process-bpmn20.xml").deploy();
         BPMUser bpmUser = bpmUserRepository.findByUserName(assignee);
@@ -51,14 +59,5 @@ public class BPMService {
         }
     }
 
-    public InputStream returnActiveProcessDiagram(String key) {
-        //TODO resourceName is null error !
-        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-                .processDefinitionKey(key).singleResult();
 
-        String diagramResourceName = processDefinition.getDiagramResourceName();
-        InputStream imageStream = repositoryService.getResourceAsStream(processDefinition.getDeploymentId(),
-                diagramResourceName);
-        return imageStream;
-    }
 }
