@@ -9,7 +9,7 @@
         typeLanguage="http://www.w3.org/2001/XMLSchema"
         expressionLanguage="http://www.w3.org/1999/XPath"
         targetNamespace="http://www.activiti.org/test">
-    <process id="demand-credit" isExecutable="true"
+    <process id="demand-credit-process" isExecutable="true"
              name="Credit request Example">
 
         <startEvent id="start" name="Start"></startEvent>
@@ -41,13 +41,13 @@
         </sequenceFlow>
 
         <serviceTask id="personal-finance-credit" name="Personal credit"
-                     activiti:class="com.example.process.LoanCalculation.PersonalFinanceCreditService"/>
+                     activiti:class="com.example.process.calculation.PersonalFinanceCreditService"/>
 
         <sequenceFlow id="finish_personal"
                       sourceRef="personal-finance-credit" targetRef="finish-process"></sequenceFlow>
 
         <serviceTask id="car-loan-credit" name="Car Credit"
-                     activiti:class="com.example.process.LoanCalculation.CarCreditService"/>
+                     activiti:class="com.example.process.calculation.CarCreditService"/>
 
         <sequenceFlow id="finish_car"
                       sourceRef="car-loan-credit" targetRef="finish-process"></sequenceFlow>

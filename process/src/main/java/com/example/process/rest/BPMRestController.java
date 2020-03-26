@@ -36,6 +36,11 @@ public class BPMRestController {
         }
     }
 
+    @RequestMapping(value = "/api/credit", method = RequestMethod.POST)
+    public void startProcessInstance(@RequestParam String name, Integer requestAmount) {
+        bpmService.startCreditApi(name, requestAmount);
+    }
+
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
     public List<Task> returnActiveUserTaskList(@RequestParam String assignee) {
         if (assignee != null) {
