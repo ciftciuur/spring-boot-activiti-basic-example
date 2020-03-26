@@ -15,10 +15,11 @@ public class PersonalFinanceCreditService implements JavaDelegate {
     public void execute(DelegateExecution execution) {
         System.out.println("Personal finance credit service run");
         //get active execution(process) variable
-        Integer requestAmount = Integer.parseInt((String) runtimeService.getVariable(execution.getId(), "demandAmount"));
 
+        Object requestAmount = runtimeService.getVariable(execution.getId(), "demandAmount");
+        Integer resultAmount = (Integer) requestAmount;
         //interest calculation(krediye göre faiz hesaplama)
-        double calcInterest = requestAmount * 0.25;
+        double calcInterest = resultAmount * 0.25;
 
         runtimeService.setVariable(execution.getId(), "demandAmount", requestAmount);
     }

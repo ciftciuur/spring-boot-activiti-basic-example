@@ -15,13 +15,8 @@
         <startEvent id="start" name="Start"></startEvent>
 
         <sequenceFlow id="defaultFlow" sourceRef="start"
-                      targetRef="create-credit-claim"/>
+                      targetRef="exclusiveGw"/>
 
-        <userTask id="create-credit-claim" name="create credit claim information"></userTask>
-
-
-        <sequenceFlow id="credit-gateway"
-                      sourceRef="create-credit-claim" targetRef="exclusiveGw"/>
 
         <exclusiveGateway id="exclusiveGw"
                           name="Exclusive Gateway"/>
