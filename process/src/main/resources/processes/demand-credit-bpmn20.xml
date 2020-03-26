@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions
+        xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:activiti="http://activiti.org/bpmn"
+        xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+        xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+        xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+        typeLanguage="http://www.w3.org/2001/XMLSchema"
+        expressionLanguage="http://www.w3.org/1999/XPath"
+        targetNamespace="http://www.activiti.org/test">
+    <process id="demand-credit" isExecutable="true"
+             name="Credit request Example">
+
+        <startEvent id="start" name="Start"></startEvent>
+
+        <sequenceFlow id="defaultFlow" sourceRef="start"
+                      targetRef="create-credit-claim"/>
+
+        <userTask id="create-credit-claim" name="create credit claim information"></userTask>
+
+
+        <sequenceFlow id="credit-gateway"
+                      sourceRef="create-credit-claim" targetRef="exclusiveGw"/>
+
+        <exclusiveGateway id="exclusiveGw"
+                          name="Exclusive Gateway"/>
+
+        <sequenceFlow id="flow" sourceRef="exclusiveGw"
+                      targetRef="car-loan-credit">
+            <conditionExpression xsi:type="tFormalExpression">
+                ${demandAmount>50000}
+            </conditionExpression>
+        </sequenceFlow>
+
+        <sequenceFlow id="flow2" sourceRef="exclusiveGw"
+                      targetRef="personal-finance-credit">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${demandAmount > 0 && demandAmount <= 50000}]]>
+            </conditionExpression>
+        </sequenceFlow>
+
+        <serviceTask id="personal-finance-credit" name="Personal credit"
+                     activiti:class="com.example.process.LoanCalculation.PersonalFinanceCreditService"/>
+
+        <sequenceFlow id="finish_personal"
+                      sourceRef="personal-finance-credit" targetRef="finish-process"></sequenceFlow>
+
+        <serviceTask id="car-loan-credit" name="Car Credit"
+                     activiti:class="com.example.process.LoanCalculation.CarCreditService"/>
+
+        <sequenceFlow id="finish_car"
+                      sourceRef="car-loan-credit" targetRef="finish-process"></sequenceFlow>
+
+        <endEvent id="finish-process" name="End"></endEvent>
+    </process>
+
+</definitions>
