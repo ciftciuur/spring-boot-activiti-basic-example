@@ -9,18 +9,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class CarCreditService implements JavaDelegate {
 
-    @Autowired
-    RuntimeService runtimeService;
 
     @Override
     public void execute(DelegateExecution execution) {
         System.out.println("Car credit service run");
         //get active execution(process) variable
-        Integer requestAmount = Integer.parseInt((String) runtimeService.getVariable(execution.getId(), "demandAmount"));
 
+
+        Object requestAmount = execution.getVariable("demandAmount");
+        Integer resultAmount = (Integer) requestAmount;
         //interest calculation(krediye göre faiz hesaplama)
-        double calcInterest = requestAmount * 0.75;
-
-        runtimeService.setVariable(execution.getId(), "demandAmount", requestAmount);
+        double calcInterest = resultAmount * 0.52;
+        double resultCalcInterest = calcInterest + resultAmount.intValue();
+        execution.setVariable("demandAmount", resultCalcInterest);
     }
 }
