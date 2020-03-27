@@ -38,7 +38,7 @@ public class BPMRestController {
 
     @RequestMapping(value = "/api/credit", method = RequestMethod.POST)
     public void startProcessInstance(@RequestParam String name, Integer requestAmount) {
-        bpmService.startCreditApi(name, requestAmount);
+        bpmService.startCreditSubProcessApi(name, requestAmount);
     }
 
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
