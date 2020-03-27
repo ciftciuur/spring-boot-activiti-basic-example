@@ -57,11 +57,11 @@ public class BPMService {
     }
 
     public void startCreditApi(String name, int requestAmount) {
-        repositoryService.createDeployment().addClasspathResource("processes/demand-credit-bpmn20.xml").deploy();
+        repositoryService.createDeployment().addClasspathResource("processes/demand-credit-subprocess-bpmn20.xml").deploy();
         Map<String, Object> variables = new HashMap<>();
         variables.put("requestUser", name);
         variables.put("demandAmount", requestAmount);
-        runtimeService.startProcessInstanceByKey("demand-credit-process", variables);
+        runtimeService.startProcessInstanceByKey("demand-credit-subprocess", variables);
 
     }
 }
