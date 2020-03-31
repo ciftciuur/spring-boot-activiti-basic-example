@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" targetNamespace="" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+  <collaboration id="sid-c0e745ff-361e-4afb-8c8d-2a1fc32b1424">
+    <participant id="sid-87F4C1D6-25E1-4A45-9DA7-AD945993D06F" name="Swim Lane" processRef="sid-C3803939-0872-457F-8336-EAE484DC4A04" />
+  </collaboration>
+  <process id="sid-C3803939-0872-457F-8336-EAE484DC4A04" name="Customer" processType="None" isClosed="false" isExecutable="false">
+    <extensionElements />
+    <laneSet id="sid-b167d0d7-e761-4636-9200-76b7f0e8e83a">
+      <lane id="sid-57E4FE0D-18E4-478D-BC5D-B15164E93254">
+        <flowNodeRef>exclusiveGw</flowNodeRef>
+        <flowNodeRef>start</flowNodeRef>
+        <flowNodeRef>car-service</flowNodeRef>
+        <flowNodeRef>personal-service</flowNodeRef>
+        <flowNodeRef>finish-event</flowNodeRef>
+      </lane>
+    </laneSet>
+    <sequenceFlow id="Flow_0seqznr" sourceRef="start" targetRef="exclusiveGw" />
+    <exclusiveGateway id="exclusiveGw">
+      <incoming>Flow_0seqznr</incoming>
+      <outgoing>Flow_1ihb3va</outgoing>
+      <outgoing>Flow_0zpchlb</outgoing>
+    </exclusiveGateway>
+    <startEvent id="start" name="Start">
+      <outgoing>Flow_0seqznr</outgoing>
+    </startEvent>
+    <serviceTask id="car-service" name="car service" camunda:class="com.example.process.calculation.CarCreditService">
+      <incoming>Flow_0zpchlb</incoming>
+      <outgoing>Flow_0b9xamp</outgoing>
+    </serviceTask>
+    <serviceTask id="personal-service" name="personal service" camunda:class="com.example.process.calculation.PersonalFinanceCreditService">
+      <incoming>Flow_1ihb3va</incoming>
+      <outgoing>Flow_0taone4</outgoing>
+    </serviceTask>
+    <sequenceFlow id="Flow_1ihb3va" sourceRef="exclusiveGw" targetRef="personal-service">
+      <extensionElements>
+        <camunda:properties>
+          <camunda:property name="demandAmount" value="50000" />
+        </camunda:properties>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_0zpchlb" sourceRef="exclusiveGw" targetRef="car-service">
+      <extensionElements>
+        <camunda:properties>
+          <camunda:property name="demandAmount" value="50000" />
+        </camunda:properties>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression">demandAmount</conditionExpression>
+    </sequenceFlow>
+    <endEvent id="finish-event" name="finish">
+      <incoming>Flow_0b9xamp</incoming>
+      <incoming>Flow_0taone4</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_0b9xamp" sourceRef="car-service" targetRef="finish-event" />
+    <sequenceFlow id="Flow_0taone4" sourceRef="personal-service" targetRef="finish-event" />
+  </process>
+  <bpmndi:BPMNDiagram id="sid-74620812-92c4-44e5-949c-aa47393d3830">
+    <bpmndi:BPMNPlane id="sid-cdcae759-2af7-4a6d-bd02-53f3352a731d" bpmnElement="sid-c0e745ff-361e-4afb-8c8d-2a1fc32b1424">
+      <bpmndi:BPMNShape id="sid-87F4C1D6-25E1-4A45-9DA7-AD945993D06F_gui" bpmnElement="sid-87F4C1D6-25E1-4A45-9DA7-AD945993D06F" isHorizontal="true">
+        <omgdc:Bounds x="83" y="105" width="717" height="355" />
+        <bpmndi:BPMNLabel labelStyle="sid-84cb49fd-2f7c-44fb-8950-83c3fa153d3b">
+          <omgdc:Bounds x="47.49999999999999" y="170.42857360839844" width="12.000000000000014" height="59.142852783203125" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="sid-57E4FE0D-18E4-478D-BC5D-B15164E93254_gui" bpmnElement="sid-57E4FE0D-18E4-478D-BC5D-B15164E93254" isHorizontal="true">
+        <omgdc:Bounds x="113" y="105" width="687" height="355" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0seqznr_di" bpmnElement="Flow_0seqznr">
+        <di:waypoint x="198" y="300" />
+        <di:waypoint x="285" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ihb3va_di" bpmnElement="Flow_1ihb3va">
+        <di:waypoint x="310" y="325" />
+        <di:waypoint x="310" y="360" />
+        <di:waypoint x="430" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zpchlb_di" bpmnElement="Flow_0zpchlb">
+        <di:waypoint x="310" y="275" />
+        <di:waypoint x="310" y="160" />
+        <di:waypoint x="430" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0b9xamp_di" bpmnElement="Flow_0b9xamp">
+        <di:waypoint x="530" y="160" />
+        <di:waypoint x="586" y="160" />
+        <di:waypoint x="586" y="260" />
+        <di:waypoint x="642" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0taone4_di" bpmnElement="Flow_0taone4">
+        <di:waypoint x="530" y="360" />
+        <di:waypoint x="586" y="360" />
+        <di:waypoint x="586" y="260" />
+        <di:waypoint x="642" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Gateway_1oglihn_di" bpmnElement="exclusiveGw" isMarkerVisible="true">
+        <omgdc:Bounds x="285" y="275" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0l6sgn0_di" bpmnElement="start">
+        <omgdc:Bounds x="162" y="282" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="168" y="319" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0p7g8mt_di" bpmnElement="car-service">
+        <omgdc:Bounds x="430" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_10tknh6_di" bpmnElement="personal-service">
+        <omgdc:Bounds x="430" y="320" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_04wz9dk_di" bpmnElement="finish-event">
+        <omgdc:Bounds x="642" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="648" y="285" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+    <bpmndi:BPMNLabelStyle id="sid-e0502d32-f8d1-41cf-9c4a-cbb49fecf581">
+      <omgdc:Font name="Arial" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" />
+    </bpmndi:BPMNLabelStyle>
+    <bpmndi:BPMNLabelStyle id="sid-84cb49fd-2f7c-44fb-8950-83c3fa153d3b">
+      <omgdc:Font name="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" />
+    </bpmndi:BPMNLabelStyle>
+  </bpmndi:BPMNDiagram>
+</definitions>
