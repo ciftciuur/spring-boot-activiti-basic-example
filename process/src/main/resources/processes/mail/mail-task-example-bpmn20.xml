@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions
+        xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:activiti="http://activiti.org/bpmn"
+        xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+        xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+        xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+        typeLanguage="http://www.w3.org/2001/XMLSchema"
+        expressionLanguage="http://www.w3.org/1999/XPath"
+        targetNamespace="http://www.activiti.org/test">
+    <process id="task-mail-example" isExecutable="true"
+             name="Mail example">
+
+        <startEvent id="start" name="Start"></startEvent>
+
+        <sequenceFlow id="defaultFlow" sourceRef="start"
+                      targetRef="sendMail"/>
+        <serviceTask id="sendMail" activiti:type="mail">
+            <extensionElements>
+                <activiti:field name="from" stringValue="order-shipping@thecompany.com"/>
+                <activiti:field name="to" expression="${recipient}"/>
+                <activiti:field name="subject" expression="Your order ${orderId} has been shipped"/>
+                <activiti:field name="html">
+                    <activiti:expression>
+                        <![CDATA[
+          <html>
+            <body>
+              Hello ${male ? 'Mr.' : 'Mrs.' } ${recipientName},<br/><br/>
+
+              As of ${now}, your order has been <b>processed and shipped</b>.<br/><br/>
+
+              Kind regards,<br/>
+
+              TheCompany.
+            </body>
+          </html>
+        ]]>
+                    </activiti:expression>
+                </activiti:field>
+            </extensionElements>
+        </serviceTask>
+
+
+        <sequenceFlow id="finish_mail"
+                      sourceRef="sendMail" targetRef="finish-process"></sequenceFlow>
+
+        <endEvent id="finish-process" name="End"></endEvent>
+    </process>
+
+</definitions>
