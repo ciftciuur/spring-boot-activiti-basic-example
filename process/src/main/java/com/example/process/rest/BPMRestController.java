@@ -3,6 +3,7 @@ package com.example.process.rest;
 import com.example.process.service.BPMDiagramService;
 import com.example.process.service.BPMService;
 
+import com.example.process.subprocess.SubProcessApiService;
 import javafx.scene.image.Image;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class BPMRestController {
     @Autowired
     private BPMDiagramService bpmDiagramService;
 
+    @Autowired
+    private SubProcessApiService subProcessApiService;
+
     @RequestMapping(value = "/process", method = RequestMethod.POST)
     public ResponseEntity<String> startProcessInstance(@RequestParam String assignee) {
         if (assignee != null) {
@@ -38,7 +42,7 @@ public class BPMRestController {
 
     @RequestMapping(value = "/api/credit", method = RequestMethod.POST)
     public void startProcessInstance(@RequestParam String name, Integer requestAmount) {
-        bpmService.startCreditSubProcessApi(name, requestAmount);
+        subProcessApiService.startCreditSubProcessApi(name, requestAmount);
     }
 
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)

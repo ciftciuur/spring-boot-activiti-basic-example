@@ -2,18 +2,12 @@ package com.example.process.service;
 
 import com.example.process.model.BPMUser;
 import com.example.process.repository.BPMUserRepository;
-import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.*;
-import org.activiti.engine.repository.ProcessDefinition;
-import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.activiti.image.ProcessDiagramGenerator;
-import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -65,12 +59,5 @@ public class BPMService {
 
     }
 
-    public void startCreditSubProcessApi(String name, int requestAmount) {
-        repositoryService.createDeployment().addClasspathResource("processes/demand-credit-subprocess-bpmn20.xml").deploy();
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("requestUser", name);
-        variables.put("demandAmount", requestAmount);
-        runtimeService.startProcessInstanceByKey("demand-credit-subprocess", variables);
 
-    }
 }
