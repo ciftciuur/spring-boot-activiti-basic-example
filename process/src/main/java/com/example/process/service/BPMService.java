@@ -40,9 +40,6 @@ public class BPMService {
         runtimeService.startProcessInstanceByKey("basic-task-example", variables);
     }
 
-    public List<Task> getTasks(String assignee) {
-        return taskService.createTaskQuery().taskAssignee(assignee).list();
-    }
 
     public void createBpmUser() {
         if (bpmUserRepository.findAll().size() == 0) {
@@ -58,6 +55,7 @@ public class BPMService {
         runtimeService.startProcessInstanceByKey("demand-credit-process", variables);
 
     }
+
 
 
 }

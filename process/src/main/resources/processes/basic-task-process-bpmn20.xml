@@ -12,7 +12,7 @@
     <process id="basic-task-example" name="The One Task Process">
         <startEvent id="theStart"/>
         <sequenceFlow id="flow1" sourceRef="theStart" targetRef="theTask"/>
-        <userTask id="theTask" name="my task" activiti:assignee="${bpmUser.id}"/>
+        <userTask id="theTask" name="my task" activiti:assignee="${bpmUser.bpmUserId}"/>
         <sequenceFlow id="flow2" sourceRef="theTask" targetRef="theEnd"/>
         <endEvent id="theEnd"/>
     </process>

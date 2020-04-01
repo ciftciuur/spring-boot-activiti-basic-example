@@ -1,8 +1,10 @@
 package com.example.process.rest;
 
+import com.example.process.dto.TaskDetailModel;
 import com.example.process.service.BPMDiagramService;
 import com.example.process.service.BPMService;
 
+import com.example.process.service.BPMTaskService;
 import com.example.process.subprocess.SubProcessApiService;
 import javafx.scene.image.Image;
 import org.activiti.engine.task.Task;
@@ -26,9 +28,10 @@ public class BPMRestController {
     private BPMService bpmService;
     @Autowired
     private BPMDiagramService bpmDiagramService;
-
     @Autowired
     private SubProcessApiService subProcessApiService;
+    @Autowired
+    private BPMTaskService bpmTaskService;
 
     @RequestMapping(value = "/process", method = RequestMethod.POST)
     public ResponseEntity<String> startProcessInstance(@RequestParam String assignee) {
@@ -45,10 +48,10 @@ public class BPMRestController {
         subProcessApiService.startCreditSubProcessApi(name, requestAmount);
     }
 
-    @RequestMapping(value = "/tasks", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/tasks", method = RequestMethod.GET)
     public List<Task> returnActiveUserTaskList(@RequestParam String assignee) {
         if (assignee != null) {
-            return bpmService.getTasks(assignee);
+            return bpmTaskService.returnActiveUserTaskList(assignee);
         } else
             return new ArrayList<Task>();
     }
@@ -60,5 +63,11 @@ public class BPMRestController {
         while ((len = bpmDiagramService.getDiagram(exId, prId).read(b, 0, 1024)) != -1) {
             response.getOutputStream().write(b, 0, len);
         }
+    }
+
+    @RequestMapping(value = "/tasks", method = RequestMethod.GET)
+    public @ResponseBody
+    List<TaskDetailModel> returnActiveAllTask() {
+        return bpmTaskService.returnActiveAllTaskList();
     }
 }
