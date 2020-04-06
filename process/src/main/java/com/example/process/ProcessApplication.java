@@ -2,10 +2,7 @@ package com.example.process;
 
 import com.example.process.repository.BPMUserRepository;
 import com.example.process.service.BPMService;
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import org.activiti.engine.*;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,5 +90,10 @@ public class ProcessApplication {
     @Bean
     public TaskService taskService(ProcessEngine processEngine) {
         return processEngine.getTaskService();
+    }
+
+    @Bean
+    public IdentityService identityService(ProcessEngine processEngine) {
+        return processEngine.getIdentityService();
     }
 }

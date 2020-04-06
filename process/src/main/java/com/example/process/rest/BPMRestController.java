@@ -1,10 +1,12 @@
 package com.example.process.rest;
 
 import com.example.process.dto.TaskDetailModel;
+import com.example.process.dto.UserDto;
 import com.example.process.service.BPMDiagramService;
 import com.example.process.service.BPMService;
 
 import com.example.process.service.BPMTaskService;
+import com.example.process.service.BPMUserService;
 import com.example.process.subprocess.SubProcessApiService;
 import javafx.scene.image.Image;
 import org.activiti.engine.task.Task;
@@ -32,6 +34,8 @@ public class BPMRestController {
     private SubProcessApiService subProcessApiService;
     @Autowired
     private BPMTaskService bpmTaskService;
+    @Autowired
+    private BPMUserService bpmUserService;
 
     @RequestMapping(value = "/process", method = RequestMethod.POST)
     public ResponseEntity<String> startProcessInstance(@RequestParam String assignee) {
@@ -40,6 +44,16 @@ public class BPMRestController {
             return new ResponseEntity<String>("Success !", HttpStatus.OK);
         } else {
             return new ResponseEntity<String>("Username not null !", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/api/create/user", method = RequestMethod.POST)
+    public ResponseEntity<String> createNewUserForActiviti(@RequestBody UserDto userDto) {
+        if (userDto != null) {
+            bpmUserService.createUser(userDto);
+            return new ResponseEntity<String>("Success !", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<String>("User not null !", HttpStatus.BAD_REQUEST);
         }
     }
 
