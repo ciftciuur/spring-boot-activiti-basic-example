@@ -84,4 +84,12 @@ public class BPMRestController {
     List<TaskDetailModel> returnActiveAllTask() {
         return bpmTaskService.returnActiveAllTaskList();
     }
+
+    @RequestMapping(value = "/api/simple", method = RequestMethod.POST)
+    public void startSimpleProcess(@RequestParam Integer requestAmount) {
+        bpmService.startNewProcess(requestAmount);
+    }
 }
+
+
+

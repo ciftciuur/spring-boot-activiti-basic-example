@@ -3,14 +3,12 @@ package com.example.process.service;
 import com.example.process.model.BPMUser;
 import com.example.process.repository.BPMUserRepository;
 import org.activiti.engine.*;
-import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -53,9 +51,14 @@ public class BPMService {
         variables.put("requestUser", name);
         variables.put("demandAmount", requestAmount);
         runtimeService.startProcessInstanceByKey("demand-credit-process", variables);
-
     }
 
+    public void startNewProcess(int requestAmount) {
+        repositoryService.createDeployment().addClasspathResource("processes/test-diagram.bpmn20.xml").deploy();
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("demandAmount", requestAmount);
+        runtimeService.startProcessInstanceByKey("sid-C3803939-0872-457F-8336-EAE484DC4A04", variables);
+    }
 
 
 }

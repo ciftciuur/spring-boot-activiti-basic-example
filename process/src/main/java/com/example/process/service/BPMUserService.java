@@ -19,6 +19,7 @@ public class BPMUserService {
             User saveUser = identityService.newUser(userDto.getUserName());
 
             //set user property
+            saveUser.setId(userDto.getUserName());
             saveUser.setPassword(userDto.getPassword());
             saveUser.setLastName(userDto.getSurName());
             saveUser.setFirstName(userDto.getName());
