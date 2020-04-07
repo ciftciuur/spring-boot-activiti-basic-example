@@ -20,7 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 @RestController
@@ -81,13 +83,26 @@ public class BPMRestController {
 
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
     public @ResponseBody
-    List<TaskDetailModel> returnActiveAllTask() {
-        return bpmTaskService.returnActiveAllTaskList();
+    List<TaskDetailModel> returnActiveAllTask(@RequestParam String groupName) {
+        if (groupName != null) {
+            return bpmTaskService.returnTaskListForGroupName(groupName);
+        } else {
+            return bpmTaskService.returnActiveAllTaskList();
+        }
+
     }
 
     @RequestMapping(value = "/api/simple", method = RequestMethod.POST)
-    public void startSimpleProcess(@RequestParam Integer requestAmount) {
-        bpmService.startNewProcess(requestAmount);
+    public void startSimpleProcess() {
+        bpmService.startNewProcess();
+    }
+
+
+    @RequestMapping(value = "/api/task/complete", method = RequestMethod.POST)
+    public void completeTask(String taskId, int requestAmount) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("demandAmount", requestAmount);
+        bpmTaskService.completeTask(taskId, variables);
     }
 }
 

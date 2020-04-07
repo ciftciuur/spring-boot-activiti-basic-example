@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
              xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns:activiti="http://activiti.org/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
-             targetNamespace=""
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:activiti="http://activiti.org/bpmn" targetNamespace=""
              xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
     <collaboration id="sid-c0e745ff-361e-4afb-8c8d-2a1fc32b1424">
         <participant id="sid-87F4C1D6-25E1-4A45-9DA7-AD945993D06F" name="Swim Lane"
@@ -29,7 +29,13 @@
         <startEvent id="sid-D7F237E8-56D0-4283-A3CE-4F0EFE446138" name="Start">
             <outgoing>Flow_1gqjza9</outgoing>
         </startEvent>
-        <userTask id="Activity_02aocf1" name="kredi talebi olustur" activiti:candidateGroups="talepal">
+        <userTask id="Activity_02aocf1" name="kredi talebi olustur" activiti:formKey="LoanRequestForm"
+                  activiti:candidateGroups="talepal">
+            <extensionElements>
+                <activiti:formData>
+                    <activiti:formField id="demandAmount" type="long" defaultValue="0"/>
+                </activiti:formData>
+            </extensionElements>
             <incoming>Flow_1gqjza9</incoming>
             <outgoing>Flow_1fplg7i</outgoing>
         </userTask>
@@ -41,7 +47,7 @@
         <sequenceFlow id="Flow_1gqjza9" sourceRef="sid-D7F237E8-56D0-4283-A3CE-4F0EFE446138"
                       targetRef="Activity_02aocf1"/>
         <sequenceFlow id="Flow_1ootkwv" sourceRef="Gateway_1cqxrpc" targetRef="Activity_0vffilw">
-            <conditionExpression xsi:type="tFormalExpression">demandAmount&gt;500000</conditionExpression>
+            <conditionExpression xsi:type="tFormalExpression">  ${demandAmount>50000}</conditionExpression>
         </sequenceFlow>
         <sequenceFlow id="Flow_1fplg7i" sourceRef="Activity_02aocf1" targetRef="Gateway_1cqxrpc"/>
         <serviceTask id="Activity_0vffilw" name="carcredit service"
@@ -50,7 +56,7 @@
             <outgoing>Flow_0oz3335</outgoing>
         </serviceTask>
         <sequenceFlow id="Flow_0n07xd3" sourceRef="Gateway_1cqxrpc" targetRef="Activity_0c1mqpc">
-            <conditionExpression xsi:type="tFormalExpression">demantAmount&lt;500000</conditionExpression>
+            <conditionExpression xsi:type="tFormalExpression"><![CDATA[${demandAmount > 0 && demandAmount <= 50000}]]></conditionExpression>
         </sequenceFlow>
         <serviceTask id="Activity_0c1mqpc" name="personal credit service"
                      activiti:class="com.example.process.calculation.PersonalFinanceCreditService">
@@ -80,37 +86,19 @@
                                   height="59.142852783203125"/>
                 </bpmndi:BPMNLabel>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape id="sid-57E4FE0D-18E4-478D-BC5D-B15164E93254_gui"
-                              bpmnElement="sid-57E4FE0D-18E4-478D-BC5D-B15164E93254" isHorizontal="true">
-                <omgdc:Bounds x="-204" y="10" width="627" height="250"/>
+            <bpmndi:BPMNShape id="Lane_0u1630k_di" bpmnElement="Lane_0u1630k" isHorizontal="true">
+                <omgdc:Bounds x="-204" y="260" width="627" height="120"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape id="Lane_1bbqwn5_di" bpmnElement="Lane_1bbqwn5" isHorizontal="true">
                 <omgdc:Bounds x="-204" y="380" width="627" height="120"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape id="Lane_0u1630k_di" bpmnElement="Lane_0u1630k" isHorizontal="true">
-                <omgdc:Bounds x="-204" y="260" width="627" height="120"/>
+            <bpmndi:BPMNShape id="sid-57E4FE0D-18E4-478D-BC5D-B15164E93254_gui"
+                              bpmnElement="sid-57E4FE0D-18E4-478D-BC5D-B15164E93254" isHorizontal="true">
+                <omgdc:Bounds x="-204" y="10" width="627" height="250"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge id="Flow_1gqjza9_di" bpmnElement="Flow_1gqjza9">
-                <di:waypoint x="-99" y="145"/>
-                <di:waypoint x="53" y="145"/>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge id="Flow_1ootkwv_di" bpmnElement="Flow_1ootkwv">
-                <di:waypoint x="128" y="315"/>
-                <di:waypoint x="220" y="315"/>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge id="Flow_1fplg7i_di" bpmnElement="Flow_1fplg7i">
-                <di:waypoint x="103" y="185"/>
-                <di:waypoint x="103" y="290"/>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge id="Flow_0n07xd3_di" bpmnElement="Flow_0n07xd3">
-                <di:waypoint x="78" y="315"/>
-                <di:waypoint x="20" y="315"/>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge id="Flow_109ng23_di" bpmnElement="Flow_109ng23">
-                <di:waypoint x="20" y="315"/>
-                <di:waypoint x="30" y="315"/>
-                <di:waypoint x="30" y="440"/>
-                <di:waypoint x="40" y="440"/>
+            <bpmndi:BPMNEdge id="Flow_1v4oi44_di" bpmnElement="Flow_1v4oi44">
+                <di:waypoint x="140" y="440"/>
+                <di:waypoint x="282" y="440"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge id="Flow_0oz3335_di" bpmnElement="Flow_0oz3335">
                 <di:waypoint x="220" y="315"/>
@@ -118,9 +106,27 @@
                 <di:waypoint x="180" y="440"/>
                 <di:waypoint x="140" y="440"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge id="Flow_1v4oi44_di" bpmnElement="Flow_1v4oi44">
-                <di:waypoint x="140" y="440"/>
-                <di:waypoint x="282" y="440"/>
+            <bpmndi:BPMNEdge id="Flow_109ng23_di" bpmnElement="Flow_109ng23">
+                <di:waypoint x="20" y="315"/>
+                <di:waypoint x="30" y="315"/>
+                <di:waypoint x="30" y="440"/>
+                <di:waypoint x="40" y="440"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_0n07xd3_di" bpmnElement="Flow_0n07xd3">
+                <di:waypoint x="78" y="315"/>
+                <di:waypoint x="20" y="315"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_1fplg7i_di" bpmnElement="Flow_1fplg7i">
+                <di:waypoint x="103" y="185"/>
+                <di:waypoint x="103" y="290"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_1ootkwv_di" bpmnElement="Flow_1ootkwv">
+                <di:waypoint x="128" y="315"/>
+                <di:waypoint x="220" y="315"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_1gqjza9_di" bpmnElement="Flow_1gqjza9">
+                <di:waypoint x="-99" y="145"/>
+                <di:waypoint x="53" y="145"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape id="StartEvent_0l6sgn0_di" bpmnElement="sid-D7F237E8-56D0-4283-A3CE-4F0EFE446138">
                 <omgdc:Bounds x="-135" y="127" width="36" height="36"/>

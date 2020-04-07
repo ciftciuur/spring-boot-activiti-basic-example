@@ -53,11 +53,9 @@ public class BPMService {
         runtimeService.startProcessInstanceByKey("demand-credit-process", variables);
     }
 
-    public void startNewProcess(int requestAmount) {
+    public void startNewProcess() {
         repositoryService.createDeployment().addClasspathResource("processes/test-diagram.bpmn20.xml").deploy();
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("demandAmount", requestAmount);
-        runtimeService.startProcessInstanceByKey("sid-C3803939-0872-457F-8336-EAE484DC4A04", variables);
+        runtimeService.startProcessInstanceByKey("sid-C3803939-0872-457F-8336-EAE484DC4A04");
     }
 
 
