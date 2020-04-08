@@ -1,6 +1,6 @@
 package com.example.process.rest;
 
-import com.example.process.dto.TaskDetailModel;
+import com.example.process.dto.TaskDetailModelDto;
 import com.example.process.dto.UserDto;
 import com.example.process.service.BPMDiagramService;
 import com.example.process.service.BPMService;
@@ -8,22 +8,18 @@ import com.example.process.service.BPMService;
 import com.example.process.service.BPMTaskService;
 import com.example.process.service.BPMUserService;
 import com.example.process.subprocess.SubProcessApiService;
-import javafx.scene.image.Image;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 @RestController
 public class BPMRestController {
@@ -34,10 +30,6 @@ public class BPMRestController {
     private BPMDiagramService bpmDiagramService;
     @Autowired
     private SubProcessApiService subProcessApiService;
-    @Autowired
-    private BPMTaskService bpmTaskService;
-    @Autowired
-    private BPMUserService bpmUserService;
 
     @RequestMapping(value = "/process", method = RequestMethod.POST)
     public ResponseEntity<String> startProcessInstance(@RequestParam String assignee) {
@@ -49,27 +41,9 @@ public class BPMRestController {
         }
     }
 
-    @RequestMapping(value = "/api/create/user", method = RequestMethod.POST)
-    public ResponseEntity<String> createNewUserForActiviti(@RequestBody UserDto userDto) {
-        if (userDto != null) {
-            bpmUserService.createUser(userDto);
-            return new ResponseEntity<String>("Success !", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<String>("User not null !", HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @RequestMapping(value = "/api/credit", method = RequestMethod.POST)
     public void startProcessInstance(@RequestParam String name, Integer requestAmount) {
         subProcessApiService.startCreditSubProcessApi(name, requestAmount);
-    }
-
-    @RequestMapping(value = "/user/tasks", method = RequestMethod.GET)
-    public List<Task> returnActiveUserTaskList(@RequestParam String assignee) {
-        if (assignee != null) {
-            return bpmTaskService.returnActiveUserTaskList(assignee);
-        } else
-            return new ArrayList<Task>();
     }
 
     @RequestMapping(value = "/diagram", method = RequestMethod.POST)
@@ -81,29 +55,12 @@ public class BPMRestController {
         }
     }
 
-    @RequestMapping(value = "/tasks", method = RequestMethod.GET)
-    public @ResponseBody
-    List<TaskDetailModel> returnActiveAllTask(@RequestParam String groupName) {
-        if (groupName != null) {
-            return bpmTaskService.returnTaskListForGroupName(groupName);
-        } else {
-            return bpmTaskService.returnActiveAllTaskList();
-        }
-
-    }
-
     @RequestMapping(value = "/api/simple", method = RequestMethod.POST)
     public void startSimpleProcess() {
         bpmService.startNewProcess();
     }
 
 
-    @RequestMapping(value = "/api/task/complete", method = RequestMethod.POST)
-    public void completeTask(String taskId, int requestAmount) {
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("demandAmount", requestAmount);
-        bpmTaskService.completeTask(taskId, variables);
-    }
 }
 
 

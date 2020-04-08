@@ -36,13 +36,13 @@
         </sequenceFlow>
 
         <serviceTask id="personal-finance-credit" name="Personal credit"
-                     activiti:class="com.example.process.calculation.PersonalFinanceCreditService"/>
+                     activiti:class="com.example.process.bpmn.service.PersonalFinanceCreditService"/>
 
         <sequenceFlow id="finish_personal"
                       sourceRef="personal-finance-credit" targetRef="finish-process"></sequenceFlow>
 
         <serviceTask id="car-loan-credit" name="Car Credit"
-                     activiti:class="com.example.process.calculation.CarCreditService"/>
+                     activiti:class="com.example.process.bpmn.service.CarCreditService"/>
 
         <sequenceFlow id="finish_car"
                       sourceRef="car-loan-credit" targetRef="finish-process"></sequenceFlow>

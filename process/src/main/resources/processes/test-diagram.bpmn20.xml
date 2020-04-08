@@ -51,7 +51,7 @@
         </sequenceFlow>
         <sequenceFlow id="Flow_1fplg7i" sourceRef="Activity_02aocf1" targetRef="Gateway_1cqxrpc"/>
         <serviceTask id="Activity_0vffilw" name="carcredit service"
-                     activiti:class="com.example.process.calculation.CarCreditService">
+                     activiti:class="com.example.process.bpmn.service.CarCreditService">
             <incoming>Flow_1ootkwv</incoming>
             <outgoing>Flow_0oz3335</outgoing>
         </serviceTask>
@@ -59,7 +59,7 @@
             <conditionExpression xsi:type="tFormalExpression"><![CDATA[${demandAmount > 0 && demandAmount <= 50000}]]></conditionExpression>
         </sequenceFlow>
         <serviceTask id="Activity_0c1mqpc" name="personal credit service"
-                     activiti:class="com.example.process.calculation.PersonalFinanceCreditService">
+                     activiti:class="com.example.process.bpmn.service.PersonalFinanceCreditService">
             <incoming>Flow_0n07xd3</incoming>
             <outgoing>Flow_109ng23</outgoing>
         </serviceTask>

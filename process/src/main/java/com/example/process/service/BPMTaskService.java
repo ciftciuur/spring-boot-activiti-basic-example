@@ -1,6 +1,6 @@
 package com.example.process.service;
 
-import com.example.process.dto.TaskDetailModel;
+import com.example.process.dto.TaskDetailModelDto;
 import com.example.process.repository.BPMUserRepository;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -28,12 +28,12 @@ public class BPMTaskService {
     /*
         active all user task list
      */
-    public List<TaskDetailModel> returnActiveAllTaskList() {
-        List<TaskDetailModel> taskDetailModels;
+    public List<TaskDetailModelDto> returnActiveAllTaskList() {
+        List<TaskDetailModelDto> taskDetailModels;
         List<Task> taskList = taskService.createTaskQuery().active().list();
         if (taskList.size() != 0) {
             taskDetailModels = new ArrayList<>();
-            TaskDetailModel detailModel = new TaskDetailModel();
+            TaskDetailModelDto detailModel = new TaskDetailModelDto();
             for (Task task : taskList) {
                 detailModel.setCreateTime(task.getCreateTime());
                 detailModel.setTaskId(task.getId());
@@ -49,12 +49,12 @@ public class BPMTaskService {
     }
 
 
-    public List<TaskDetailModel> returnTaskListForGroupName(String groupName) {
-        List<TaskDetailModel> taskDetailModels;
+    public List<TaskDetailModelDto> returnTaskListForGroupName(String groupName) {
+        List<TaskDetailModelDto> taskDetailModels;
         List<Task> taskListOwner = taskService.createTaskQuery().taskCandidateGroup(groupName).list();
         if (taskListOwner.size() != 0) {
             taskDetailModels = new ArrayList<>();
-            TaskDetailModel detailModel = new TaskDetailModel();
+            TaskDetailModelDto detailModel = new TaskDetailModelDto();
             for (Task task : taskListOwner) {
                 detailModel.setCreateTime(task.getCreateTime());
                 detailModel.setTaskId(task.getId());

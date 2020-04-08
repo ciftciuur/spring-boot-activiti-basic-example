@@ -15,12 +15,8 @@ import java.util.Map;
 @Service
 @Transactional
 public class SubProcessApiService {
-
-
     @Autowired
     private RuntimeService runtimeService;
-
-
     @Autowired
     private RepositoryService repositoryService;
 

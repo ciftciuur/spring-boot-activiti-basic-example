@@ -1,17 +1,30 @@
 package com.example.process.service;
 
 import com.example.process.dto.UserDto;
+import com.example.process.model.BPMUser;
+import com.example.process.repository.BPMUserRepository;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.Group;
 import org.activiti.engine.identity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class BPMUserService {
 
     @Autowired
     IdentityService identityService;
+
+    @Autowired
+    private BPMUserRepository bpmUserRepository;
+
+    public void createBpmUser() {
+        if (bpmUserRepository.findAll().size() == 0) {
+            bpmUserRepository.save(new BPMUser("demo", "demoname", "demolastname", new Date()));
+        }
+    }
 
     public void createUser(UserDto userDto) {
         if (userDto != null) {

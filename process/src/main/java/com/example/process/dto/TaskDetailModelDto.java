@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 
-public class TaskDetailModel {
+public class TaskDetailModelDto {
     @JsonProperty(value = "taskId")
     private String taskId;
 

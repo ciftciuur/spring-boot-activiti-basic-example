@@ -16,10 +16,10 @@ import java.util.Map;
 public class BPMService {
 
     @Autowired
-    private BPMUserRepository bpmUserRepository;
+    private RuntimeService runtimeService;
 
     @Autowired
-    private RuntimeService runtimeService;
+    private BPMUserRepository bpmUserRepository;
 
     @Autowired
     private TaskService taskService;
@@ -38,12 +38,6 @@ public class BPMService {
         runtimeService.startProcessInstanceByKey("basic-task-example", variables);
     }
 
-
-    public void createBpmUser() {
-        if (bpmUserRepository.findAll().size() == 0) {
-            bpmUserRepository.save(new BPMUser("demo", "demoname", "demolastname", new Date()));
-        }
-    }
 
     public void startCreditApi(String name, int requestAmount) {
         repositoryService.createDeployment().addClasspathResource("processes/demand-credit-process-bpmn20.xml").deploy();
