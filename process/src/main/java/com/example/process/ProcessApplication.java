@@ -2,6 +2,7 @@ package com.example.process;
 
 import com.example.process.repository.BPMUserRepository;
 import com.example.process.service.BPMService;
+import com.example.process.service.BPMUserService;
 import org.activiti.engine.*;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.activiti.spring.SpringProcessEngineConfiguration;
@@ -25,6 +26,8 @@ import java.io.IOException;
 @ComponentScan
 @EnableAutoConfiguration
 public class ProcessApplication {
+    @Autowired
+    BPMUserService bpmUserService;
 
 
     public static void main(String[] args) {
@@ -36,7 +39,7 @@ public class ProcessApplication {
         return new CommandLineRunner() {
             @Override
             public void run(String... args) throws Exception {
-                bpmService.createBpmUser();
+                bpmUserService.createBpmUser();
             }
         };
     }

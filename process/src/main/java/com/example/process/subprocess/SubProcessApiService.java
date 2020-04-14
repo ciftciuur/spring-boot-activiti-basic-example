@@ -5,6 +5,7 @@ import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.repository.Deployment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,8 @@ public class SubProcessApiService {
 
 
     public void startCreditSubProcessApi(String name, int requestAmount) {
-        repositoryService.createDeployment().addClasspathResource("processes/subprocess/demand-credit-subprocess-bpmn20.xml").deploy();
+        Deployment dp = repositoryService.createDeployment().addClasspathResource("processes/subprocess/demand-credit-subprocess-bpmn20.xml").deploy();
+        System.out.println(dp.getKey());
         Map<String, Object> variables = new HashMap<>();
         variables.put("requestUser", name);
         variables.put("demandAmount", requestAmount);

@@ -4,7 +4,10 @@ import com.example.process.dto.TaskDetailModelDto;
 import com.example.process.repository.BPMUserRepository;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +53,8 @@ public class BPMTaskService {
 
 
     public List<TaskDetailModelDto> returnTaskListForGroupName(String groupName) {
+        ProcessDefinition definition;
+        ProcessInstance instance;
         List<TaskDetailModelDto> taskDetailModels;
         List<Task> taskListOwner = taskService.createTaskQuery().taskCandidateGroup(groupName).list();
         if (taskListOwner.size() != 0) {
