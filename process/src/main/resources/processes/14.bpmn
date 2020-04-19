@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" targetNamespace="" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+  <collaboration id="isbirligi">
+    <participant id="Katilimcilar" name="&#10;Katılımcılar&#10;" processRef="ImarDurumSureci_1_0" />
+  </collaboration>
+  <process id="ImarDurumSureci_1_0" name="İmar Durum Süreci" processType="None" isClosed="false" isExecutable="true" activiti:candidateStarterGroups="Kentli Servisi" activiti:versionTag="1.0">
+    <extensionElements />
+    <laneSet id="kullaniciGruplari">
+      <lane id="GelirServisi" name="Gelir Servisi">
+        <flowNodeRef>imarDurumuHarcOdeme</flowNodeRef>
+      </lane>
+      <lane id="ImarSehircilik" name="İmar ve Şehircilik Müdürlüğü">
+        <flowNodeRef>imarDurumuBasvuruFormu</flowNodeRef>
+        <flowNodeRef>kararDurumuKontrol</flowNodeRef>
+        <flowNodeRef>verilemezSMS</flowNodeRef>
+        <flowNodeRef>bitir</flowNodeRef>
+        <flowNodeRef>basvuruTipiKontrol</flowNodeRef>
+        <flowNodeRef>imarDurumuDosyasi</flowNodeRef>
+        <flowNodeRef>imarDurumuSMS</flowNodeRef>
+      </lane>
+      <lane id="KentliServisi" name="Kentli Servisi">
+        <flowNodeRef>basla</flowNodeRef>
+      </lane>
+      <lane id="ebysServisi" name="Ebys Servisi">
+        <flowNodeRef>imarDurumuImza</flowNodeRef>
+        <flowNodeRef>imzaBeklemeHavuzu</flowNodeRef>
+      </lane>
+    </laneSet>
+    <userTask id="imarDurumuBasvuruFormu" name="Başvuru değerlendirilir" activiti:formKey="com.beyazweb.KYS.modules.imar.forms.FrmImarDurumuBasvuru" activiti:candidateGroups="İmar ve Şehircilik Müdürlüğü">
+      <documentation>Ücretli ise harç hesaplanır, verilemez ise gerekçesi yazılır.</documentation>
+      <incoming>Flow_0oj481s</incoming>
+      <outgoing>Flow_03h4hwz</outgoing>
+    </userTask>
+    <exclusiveGateway id="kararDurumuKontrol" name="Verilebilir mi?">
+      <incoming>Flow_03h4hwz</incoming>
+      <outgoing>flowVerilebilir</outgoing>
+      <outgoing>flowVerilemez</outgoing>
+    </exclusiveGateway>
+    <serviceTask id="verilemezSMS" name="Vatandaşa verilemez smsi gönderilir" activiti:expression="${com.beyazweb.KYS.modules.imar.servis.SmsServis.send(&#34;VERILEMEZ&#34;)}">
+      <incoming>flowVerilemez</incoming>
+      <outgoing>Flow_1ojf17k</outgoing>
+    </serviceTask>
+    <endEvent id="bitir" name="İşlem bitti&#10;&#10;">
+      <incoming>Flow_150fegb</incoming>
+      <incoming>Flow_1ojf17k</incoming>
+    </endEvent>
+    <exclusiveGateway id="basvuruTipiKontrol" name="Ücretli mi?">
+      <incoming>flowVerilebilir</incoming>
+      <outgoing>flowUcretli</outgoing>
+      <outgoing>flowUcretsiz</outgoing>
+    </exclusiveGateway>
+    <userTask id="imarDurumuHarcOdeme" name="Harç ödenir" activiti:formKey="com.beyazweb.KYS.modules.imar.forms.FrmImarDurumuHarcOdeme" activiti:candidateGroups="Gelir Servisi">
+      <incoming>flowUcretli</incoming>
+      <outgoing>Flow_1i19rvk</outgoing>
+    </userTask>
+    <userTask id="imarDurumuDosyasi" name="Düzenlenen imar durumu forma eklenir EBYS servisine gönderilir" activiti:formKey="com.beyazweb.KYS.modules.imar.forms.FrmImarDurumuBasvuru" activiti:candidateGroups="İmar ve Şehircilik Müdürlüğü">
+      <incoming>Flow_1i19rvk</incoming>
+      <incoming>flowUcretsiz</incoming>
+      <outgoing>Flow_0d764pf</outgoing>
+    </userTask>
+    <serviceTask id="imarDurumuSMS" name="Vatandaşa belgeniz hazır smsi gönderilir" activiti:expression="${com.beyazweb.KYS.modules.imar.servis.SmsServis.send(&#34;BELGEHAZIR&#34;)}">
+      <incoming>Flow_0mrqcmu</incoming>
+      <outgoing>Flow_150fegb</outgoing>
+    </serviceTask>
+    <serviceTask id="imarDurumuImza" name="Belge imza için ebys sistemine gönderilir" activiti:expression="${com.beyazweb.KYS.modules.imar.servis.EbysServis.send(basvuruId)}">
+      <incoming>Flow_0d764pf</incoming>
+      <outgoing>Flow_0hme3yp</outgoing>
+    </serviceTask>
+    <task id="imzaBeklemeHavuzu" name="İmza işlemleri bekleme havuzu">
+      <incoming>Flow_0hme3yp</incoming>
+      <outgoing>Flow_0mrqcmu</outgoing>
+    </task>
+    <sequenceFlow id="flowUcretsiz" name="Hayır" sourceRef="basvuruTipiKontrol" targetRef="imarDurumuDosyasi">
+      <conditionExpression xsi:type="tFormalExpression">${ucretDurumu=="UCRETSIZ"}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_1ojf17k" sourceRef="verilemezSMS" targetRef="bitir" />
+    <sequenceFlow id="flowVerilemez" name="Hayır" sourceRef="kararDurumuKontrol" targetRef="verilemezSMS">
+      <conditionExpression xsi:type="tFormalExpression">${kararDurumu=="VERILEMEZ"}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_150fegb" sourceRef="imarDurumuSMS" targetRef="bitir" />
+    <sequenceFlow id="flowVerilebilir" name="Evet" sourceRef="kararDurumuKontrol" targetRef="basvuruTipiKontrol">
+      <conditionExpression xsi:type="tFormalExpression">${kararDurumu=="VERILEBILIR"}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_03h4hwz" sourceRef="imarDurumuBasvuruFormu" targetRef="kararDurumuKontrol" />
+    <sequenceFlow id="Flow_1i19rvk" sourceRef="imarDurumuHarcOdeme" targetRef="imarDurumuDosyasi" />
+    <sequenceFlow id="flowUcretli" name="Evet" sourceRef="basvuruTipiKontrol" targetRef="imarDurumuHarcOdeme">
+      <conditionExpression xsi:type="tFormalExpression">${ucretDurumu=="UCRETLI"}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_0oj481s" sourceRef="basla" targetRef="imarDurumuBasvuruFormu" />
+    <sequenceFlow id="Flow_0d764pf" sourceRef="imarDurumuDosyasi" targetRef="imarDurumuImza" />
+    <sequenceFlow id="Flow_0hme3yp" sourceRef="imarDurumuImza" targetRef="imzaBeklemeHavuzu" />
+    <sequenceFlow id="Flow_0mrqcmu" sourceRef="imzaBeklemeHavuzu" targetRef="imarDurumuSMS" />
+    <startEvent id="basla" name="Başvuru alınır">
+      <outgoing>Flow_0oj481s</outgoing>
+    </startEvent>
+    <textAnnotation id="imzaAciklama">
+      <text>Ebys sistemi imza işlemleri bittiğide imzaReturn(basvuruId) servisini çağırır.  imzaDurumu = "IMZALANDI" yapılır. Süreç,  "Havuz Servisi" tarafından ilerletilir.</text>
+    </textAnnotation>
+    <textAnnotation id="degerlendirmeAciklamasi">
+      <text>Formda : Verilemez ise gerekçeli yazı hazırlanır, ücretli ise harç hesaplanır</text>
+    </textAnnotation>
+    <association id="Association_1p9fafr" sourceRef="imzaBeklemeHavuzu" targetRef="imzaAciklama" />
+    <association id="Association_0ikf7cw" sourceRef="imarDurumuBasvuruFormu" targetRef="degerlendirmeAciklamasi" />
+    <textAnnotation id="baslaAciklama">
+      <text>Başvuru, "Kentli Servisi" tarafından dilekçe ile veya E-Belediye sitesinden "Imar Durumu Servisi" çağırılarak alınır.</text>
+    </textAnnotation>
+    <association id="Association_09fkc4d" sourceRef="basla" targetRef="baslaAciklama" />
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram">
+    <bpmndi:BPMNPlane id="BPMNPlane_isbirligi" bpmnElement="isbirligi">
+      <bpmndi:BPMNShape id="BPMNShape_yeniKatilimci" bpmnElement="Katilimcilar" isHorizontal="true">
+        <omgdc:Bounds x="156" y="30" width="1077" height="910" />
+        <bpmndi:BPMNLabel labelStyle="BPMNLabelStyleFont12">
+          <omgdc:Bounds x="47.49999999999999" y="170.42857360839844" width="12.000000000000014" height="59.142852783203125" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0gdj1nz_di" bpmnElement="GelirServisi" isHorizontal="true">
+        <omgdc:Bounds x="186" y="530" width="1047" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_07wxi0n_di" bpmnElement="ImarSehircilik" isHorizontal="true">
+        <omgdc:Bounds x="186" y="250" width="1047" height="280" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_kullaniciGrup" bpmnElement="KentliServisi" isHorizontal="true">
+        <omgdc:Bounds x="186" y="30" width="1047" height="220" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_096vvrj_di" bpmnElement="ebysServisi" isHorizontal="true">
+        <omgdc:Bounds x="186" y="650" width="1047" height="290" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0df9v84_di" bpmnElement="imzaAciklama">
+        <omgdc:Bounds x="443" y="787" width="175" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_08toqij_di" bpmnElement="degerlendirmeAciklamasi">
+        <omgdc:Bounds x="323" y="310" width="135" height="68" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0weetk9_di" bpmnElement="baslaAciklama">
+        <omgdc:Bounds x="370" y="90" width="99.98924268502583" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0nbxhw3_di" bpmnElement="flowUcretsiz">
+        <di:waypoint x="628" y="441" />
+        <di:waypoint x="733" y="441" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="667" y="423" width="28" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ojf17k_di" bpmnElement="Flow_1ojf17k">
+        <di:waypoint x="1043" y="330" />
+        <di:waypoint x="1083" y="330" />
+        <di:waypoint x="1083" y="380" />
+        <di:waypoint x="1125" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1x5ejij_di" bpmnElement="flowVerilemez">
+        <di:waypoint x="483" y="416" />
+        <di:waypoint x="483" y="330" />
+        <di:waypoint x="943" y="330" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="639" y="313" width="28" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_150fegb_di" bpmnElement="Flow_150fegb">
+        <di:waypoint x="1043" y="441" />
+        <di:waypoint x="1083" y="441" />
+        <di:waypoint x="1083" y="380" />
+        <di:waypoint x="1125" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kq264j_di" bpmnElement="flowVerilebilir">
+        <di:waypoint x="508" y="441" />
+        <di:waypoint x="578" y="441" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="532" y="423" width="23" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03h4hwz_di" bpmnElement="Flow_03h4hwz">
+        <di:waypoint x="343" y="441" />
+        <di:waypoint x="458" y="441" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i19rvk_di" bpmnElement="Flow_1i19rvk">
+        <di:waypoint x="653" y="590" />
+        <di:waypoint x="683" y="590" />
+        <di:waypoint x="683" y="441" />
+        <di:waypoint x="733" y="441" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ib7l7j_di" bpmnElement="flowUcretli">
+        <di:waypoint x="603" y="466" />
+        <di:waypoint x="603" y="550" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="607" y="482" width="23" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0oj481s_di" bpmnElement="Flow_0oj481s">
+        <di:waypoint x="293" y="171" />
+        <di:waypoint x="293" y="401" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0d764pf_di" bpmnElement="Flow_0d764pf">
+        <di:waypoint x="783" y="481" />
+        <di:waypoint x="783" y="690" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0hme3yp_di" bpmnElement="Flow_0hme3yp">
+        <di:waypoint x="783" y="770" />
+        <di:waypoint x="783" y="810" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mrqcmu_di" bpmnElement="Flow_0mrqcmu">
+        <di:waypoint x="833" y="850" />
+        <di:waypoint x="993" y="850" />
+        <di:waypoint x="993" y="481" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_1hk7tmj_di" bpmnElement="imarDurumuBasvuruFormu">
+        <omgdc:Bounds x="243" y="401" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1uunjbj_di" bpmnElement="kararDurumuKontrol" isMarkerVisible="true">
+        <omgdc:Bounds x="458" y="416" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="452" y="473" width="65" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_00hvbce_di" bpmnElement="verilemezSMS">
+        <omgdc:Bounds x="943" y="290" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0kdughp_di" bpmnElement="bitir">
+        <omgdc:Bounds x="1125" y="362" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1121" y="405" width="48" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0y89hbw_di" bpmnElement="basvuruTipiKontrol" isMarkerVisible="true">
+        <omgdc:Bounds x="578" y="416" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="577" y="392" width="52" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1vfv7hr_di" bpmnElement="imarDurumuHarcOdeme">
+        <omgdc:Bounds x="553" y="550" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1v11hid_di" bpmnElement="imarDurumuDosyasi">
+        <omgdc:Bounds x="733" y="401" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1s4nd9g_di" bpmnElement="imarDurumuSMS">
+        <omgdc:Bounds x="943" y="401" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1oq8mw9_di" bpmnElement="imarDurumuImza">
+        <omgdc:Bounds x="733" y="690" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0pkewp1_di" bpmnElement="imzaBeklemeHavuzu">
+        <omgdc:Bounds x="733" y="810" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_basla" bpmnElement="basla">
+        <omgdc:Bounds x="275" y="135" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="260" y="113" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1p9fafr_di" bpmnElement="Association_1p9fafr">
+        <di:waypoint x="733" y="850" />
+        <di:waypoint x="618" y="851" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0ikf7cw_di" bpmnElement="Association_0ikf7cw">
+        <di:waypoint x="293" y="400" />
+        <di:waypoint x="333" y="378" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_09fkc4d_di" bpmnElement="Association_09fkc4d">
+        <di:waypoint x="311" y="153" />
+        <di:waypoint x="370" y="154" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+    <bpmndi:BPMNLabelStyle id="BPMNLabelStyleFont11">
+      <omgdc:Font name="Arial" size="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" />
+    </bpmndi:BPMNLabelStyle>
+    <bpmndi:BPMNLabelStyle id="BPMNLabelStyleFont12">
+      <omgdc:Font name="Arial" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" />
+    </bpmndi:BPMNLabelStyle>
+  </bpmndi:BPMNDiagram>
+</definitions>

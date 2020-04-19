@@ -76,7 +76,7 @@ public class ProcessApplication {
 
     @Bean
     public DataSource databaseConnection() {
-        return DataSourceBuilder.create().url("jdbc:postgresql://mypostgres:5432/process-db").username("postgres")
+        return DataSourceBuilder.create().url("jdbc:postgresql://localhost:5432/process-db").username("postgres")
                 .password("postgres").driverClassName("org.postgresql.Driver").build();
     }
 

@@ -50,9 +50,9 @@ public class BPMRestController {
     public void bpmTest(@RequestParam String exId, @RequestParam String prId, HttpServletResponse response) throws IOException {
         byte[] b = new byte[1024];
         int len;
-        while ((len = bpmDiagramService.getDiagram(exId, prId).read(b, 0, 1024)) != -1) {
+       /* while ((len = bpmDiagramService.getDiagram(exId, prId).read(b, 0, 1024)) != -1) {
             response.getOutputStream().write(b, 0, len);
-        }
+        }*/
     }
 
     @RequestMapping(value = "/api/simple", method = RequestMethod.POST)
@@ -60,6 +60,15 @@ public class BPMRestController {
         bpmService.startNewProcess();
     }
 
+    @RequestMapping(value = "/api/suspend", method = RequestMethod.POST)
+    public void suspendProcess(@RequestParam String suspendId) {
+        bpmService.suspendProcess(suspendId);
+    }
+
+    @RequestMapping(value = "/api/activate", method = RequestMethod.POST)
+    public void activateProcess(@RequestParam String suspendId) {
+        bpmService.activateProcess(suspendId);
+    }
 
 }
 
