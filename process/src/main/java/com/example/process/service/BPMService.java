@@ -3,10 +3,12 @@ package com.example.process.service;
 import com.example.process.model.BPMUser;
 import com.example.process.repository.BPMUserRepository;
 import org.activiti.engine.*;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +32,7 @@ public class BPMService {
     private ProcessEngineConfiguration processEngineConfiguration;
 
     public void startProcess(String assignee) {
+       
         repositoryService.createDeployment().addClasspathResource("processes/basic-task-process-bpmn20.xml").deploy();
         BPMUser bpmUser = bpmUserRepository.findByUserName(assignee);
         Map<String, Object> variables = new HashMap<String, Object>();
