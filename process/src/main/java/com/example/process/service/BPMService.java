@@ -23,9 +23,6 @@ public class BPMService {
     private BPMUserRepository bpmUserRepository;
 
     @Autowired
-    private TaskService taskService;
-
-    @Autowired
     private RepositoryService repositoryService;
 
     @Autowired

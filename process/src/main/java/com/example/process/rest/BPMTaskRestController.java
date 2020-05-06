@@ -35,10 +35,15 @@ public class BPMTaskRestController {
     }
 
     @RequestMapping(value = "/api/task/complete", method = RequestMethod.POST)
-    public void completeTask(String taskId, int requestAmount) {
+    public void completeTaskWithIdAndVariable(String taskId, int requestAmount) {
         Map<String, Object> variables = new HashMap<>();
         variables.put("demandAmount", requestAmount);
         bpmTaskService.completeTask(taskId, variables);
+    }
+
+    @RequestMapping(value = "/api/task", method = RequestMethod.POST)
+    public void completeTaskWithId(@RequestParam String taskId) {
+        bpmTaskService.completeTaskWithId(taskId);
     }
 
 }

@@ -51,6 +51,9 @@ public class BPMTaskService {
         }
     }
 
+    public void completeTaskWithId(String taskId) {
+        taskService.complete(taskId);
+    }
 
     public List<TaskDetailModelDto> returnTaskListForGroupName(String groupName) {
         ProcessDefinition definition;
