@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             targetNamespace="Examples">
+    <process id="simpleProcess" name="Create timers process">
+        <documentation>Test process to create a number of timers.</documentation>
+        <startEvent id="theStart">
+        </startEvent>
+
+        <sequenceFlow id="flow1" sourceRef="theStart" targetRef="usertask1"/>
+
+        <userTask id="usertask1" name="Task with timer on it">
+            <documentation>This task has a timer on it</documentation>
+        </userTask>
+        <boundaryEvent id="usertasktimer1" cancelActivity="true" attachedToRef="usertask1">
+            <timerEventDefinition>
+                <timeDuration>PT1M</timeDuration>
+            </timerEventDefinition>
+        </boundaryEvent>
+
+        <sequenceFlow id="flow2" sourceRef="usertasktimer1" targetRef="usertask2"/>
+
+        <userTask id="usertask2" name="Task with timer on it two2 ">
+            <documentation>This task has a timer on it</documentation>
+        </userTask>
+
+        <sequenceFlow id="flow5" sourceRef="usertask2" targetRef="servicetask1"/>
+
+
+        <serviceTask id="servicetask1" name="Car Credit"
+                     activiti:class="com.example.process.bpmn.service.CarCreditService"/>
+
+
+        <sequenceFlow id="flow9" sourceRef="servicetask1" targetRef="theEnd"/>
+
+        <endEvent id="theEnd"/>
+
+    </process>
+
+</definitions>
