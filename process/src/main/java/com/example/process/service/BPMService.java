@@ -3,12 +3,12 @@ package com.example.process.service;
 import com.example.process.model.BPMUser;
 import com.example.process.repository.BPMUserRepository;
 import org.activiti.engine.*;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,15 +26,20 @@ public class BPMService {
     private RepositoryService repositoryService;
 
     @Autowired
+    private TaskService taskService;
+
+    @Autowired
     private ProcessEngineConfiguration processEngineConfiguration;
 
     public void startProcess(String assignee) {
-       
         repositoryService.createDeployment().addClasspathResource("processes/basic-task-process-bpmn20.xml").deploy();
         BPMUser bpmUser = bpmUserRepository.findByUserName(assignee);
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("bpmUser", bpmUser);
         runtimeService.startProcessInstanceByKey("basic-task-example", variables);
+        String processId="102514";
+        System.out.println("process siliniyor");
+        runtimeService.deleteProcessInstance(processId,null);
     }
 
     public void suspendProcess(String processKey) {
@@ -48,11 +53,16 @@ public class BPMService {
     }
 
     public void startCreditApi(String name, int requestAmount) {
-        repositoryService.createDeployment().addClasspathResource("processes/demand-credit-process-bpmn20.xml").deploy();
+        repositoryService.createDeployment().addClasspathResource("processes/basic-task-process-bpmn20.xml").deploy();
         Map<String, Object> variables = new HashMap<>();
         variables.put("requestUser", name);
         variables.put("demandAmount", requestAmount);
-        runtimeService.startProcessInstanceByKey("demand-credit-process", variables);
+        runtimeService.startProcessInstanceByKey("basic-task-example", variables);
+    }
+
+    public void startTimerBasicApi(){
+        repositoryService.createDeployment().addClasspathResource("processes/timer/test-timer-bpmn20.xml").deploy();
+        runtimeService.startProcessInstanceByKey("timer-event");
     }
 
     public void startNewProcess() {

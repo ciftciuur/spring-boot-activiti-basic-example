@@ -2,6 +2,7 @@ package com.example.process.rest;
 
 import com.example.process.dto.TaskDetailModelDto;
 import com.example.process.service.BPMTaskService;
+import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,12 @@ public class BPMTaskRestController {
             return bpmTaskService.returnActiveAllTaskList();
         }
     }
+    @RequestMapping(value = "/api/all/process", method = RequestMethod.GET)
+    public @ResponseBody
+    List<UserTask> getAllTask(@RequestParam String id) {
+       return bpmTaskService.getAllTaskInProcess(id);
+    }
+
 
     @RequestMapping(value = "/user/tasks", method = RequestMethod.GET)
     public List<Task> returnActiveUserTaskList(@RequestParam String assignee) {

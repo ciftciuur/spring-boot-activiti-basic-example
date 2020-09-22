@@ -57,8 +57,16 @@ public class BPMRestController {
 
     @RequestMapping(value = "/api/simple", method = RequestMethod.POST)
     public void startSimpleProcess() {
-        bpmService.startNewProcess();
+        bpmService.startCreditApi("Ahmet",1000);
     }
+
+    @RequestMapping(value = "/api/simple/timer", method = RequestMethod.POST)
+    public HttpStatus startTimerProcess() {
+        bpmService.startTimerBasicApi();
+        System.out.println("process started");
+        return HttpStatus.OK;
+    }
+
 
     @RequestMapping(value = "/api/suspend", method = RequestMethod.POST)
     public void suspendProcess(@RequestParam String suspendId) {

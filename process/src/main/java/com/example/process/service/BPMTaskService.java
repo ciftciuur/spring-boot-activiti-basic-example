@@ -2,6 +2,10 @@ package com.example.process.service;
 
 import com.example.process.dto.TaskDetailModelDto;
 import com.example.process.repository.BPMUserRepository;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.Process;
+import org.activiti.bpmn.model.UserTask;
+import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -24,6 +28,8 @@ public class BPMTaskService {
     private TaskService taskService;
     @Autowired
     RuntimeService runtimeService;
+    @Autowired
+    private RepositoryService repositoryService;
 
     @Autowired
     private BPMUserRepository bpmUserRepository;
@@ -53,6 +59,22 @@ public class BPMTaskService {
 
     public void completeTaskWithId(String taskId) {
         taskService.complete(taskId);
+    }
+    public List<UserTask> getAllTaskInProcess(String processInstanceId){
+       ProcessInstance instance= runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+
+        ProcessDefinition def= repositoryService.createProcessDefinitionQuery().processDefinitionId(instance.getProcessDefinitionId()).singleResult();
+
+        BpmnModel model = repositoryService.getBpmnModel(def.getId());
+
+        List<Process> processes = model.getProcesses();
+
+        List<UserTask> userTasks = new ArrayList<UserTask>();
+
+        for( Process p : processes ) {
+            userTasks.addAll(p.findFlowElementsOfType(UserTask.class));
+        }
+        return userTasks;
     }
 
     public List<TaskDetailModelDto> returnTaskListForGroupName(String groupName) {
