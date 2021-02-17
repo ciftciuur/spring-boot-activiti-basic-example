@@ -27,22 +27,9 @@ import java.io.IOException;
 @ComponentScan
 @EnableAutoConfiguration
 public class ProcessApplication {
-    @Autowired
-    BPMUserService bpmUserService;
-
 
     public static void main(String[] args) {
         SpringApplication.run(ProcessApplication.class, args);
-    }
-
-    @Bean
-    public CommandLineRunner init(final BPMService bpmService) {
-        return new CommandLineRunner() {
-            @Override
-            public void run(String... args) throws Exception {
-                bpmUserService.createBpmUser();
-            }
-        };
     }
 
     /*
