@@ -1,27 +1,23 @@
 package com.example.process;
 
-import com.example.process.repository.BPMUserRepository;
-import com.example.process.service.BPMService;
-import com.example.process.service.BPMUserService;
-import org.activiti.engine.*;
-import org.activiti.engine.runtime.ProcessInstance;
+import javax.sql.DataSource;
+
+import org.activiti.engine.IdentityService;
+import org.activiti.engine.ManagementService;
+import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.activiti.spring.SpringProcessEngineConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.PlatformTransactionManager;
-
-import javax.sql.DataSource;
-import java.io.IOException;
 
 @Configuration
 @ComponentScan
@@ -67,7 +63,7 @@ public class ProcessApplication {
 
 	@Bean
 	public DataSource h2DatabaseConnection() {
-		return DataSourceBuilder.create().url("").username("").password("").driverClassName("").build();
+		return DataSourceBuilder.create().url("jdbc:h2:mem:activitirest").username("sa").password("password").driverClassName("org.h2.Driver").build();
 	}
 
 	@Bean
