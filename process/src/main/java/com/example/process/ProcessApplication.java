@@ -36,9 +36,9 @@ public class ProcessApplication {
 	@Bean
 	public SpringProcessEngineConfiguration processEngineConfiguration() {
 		SpringProcessEngineConfiguration config = new SpringProcessEngineConfiguration();
-		config.setDataSource(h2DatabaseConnection());
+		config.setDataSource(postgreDatabaseConnection());
 		config.setTransactionManager(transactionManager());
-		config.setDatabaseSchemaUpdate("none");
+		config.setDatabaseSchemaUpdate("create-drop");
 		config.setHistory("audit");
 		config.setAsyncExecutorActivate(true);
 		return config;
@@ -46,7 +46,7 @@ public class ProcessApplication {
 
 	@Bean
 	public PlatformTransactionManager transactionManager() {
-		return new DataSourceTransactionManager(h2DatabaseConnection());
+		return new DataSourceTransactionManager(postgreDatabaseConnection());
 	}
 
 	@Bean
@@ -58,12 +58,14 @@ public class ProcessApplication {
 
 	@Bean
 	public DataSource postgreDatabaseConnection() {
-		return DataSourceBuilder.create().url("jdbc:postgresql://localhost:5432/process-db").username("postgres").password("postgres").driverClassName("org.postgresql.Driver").build();
+		return DataSourceBuilder.create().url("jdbc:postgresql://localhost:5432/process-db").username("postgres")
+				.password("postgres").driverClassName("org.postgresql.Driver").build();
 	}
 
 	@Bean
 	public DataSource h2DatabaseConnection() {
-		return DataSourceBuilder.create().url("jdbc:h2:mem:activitirest").username("sa").password("password").driverClassName("org.h2.Driver").build();
+		return DataSourceBuilder.create().url("jdbc:h2:mem:activitirest").username("sa").password("password")
+				.driverClassName("org.h2.Driver").build();
 	}
 
 	@Bean
