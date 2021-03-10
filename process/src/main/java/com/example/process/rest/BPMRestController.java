@@ -18,10 +18,14 @@ import com.example.process.subprocess.SubProcessApiService;
 @RestController
 public class BPMRestController {
 
-	@Autowired
-	private BPMService bpmService;
-	@Autowired
-	private SubProcessApiService subProcessApiService;
+	private final BPMService bpmService;
+	private final SubProcessApiService subProcessApiService;
+
+	public BPMRestController(BPMService bpmService, SubProcessApiService subProcessApiService) {
+		super();
+		this.bpmService = bpmService;
+		this.subProcessApiService = subProcessApiService;
+	}
 
 	@RequestMapping(value = "/process", method = RequestMethod.POST)
 	public ResponseEntity<String> startProcessInstance(@RequestParam String assignee) {
