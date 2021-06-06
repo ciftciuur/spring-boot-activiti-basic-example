@@ -22,7 +22,6 @@ public class BPMRestController {
 	private final SubProcessApiService subProcessApiService;
 
 	public BPMRestController(BPMService bpmService, SubProcessApiService subProcessApiService) {
-		super();
 		this.bpmService = bpmService;
 		this.subProcessApiService = subProcessApiService;
 	}
